@@ -14,7 +14,7 @@ app.use(express.json());
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASS}@cluster0.insvee7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -33,9 +33,23 @@ async function run() {
 
         const queryCollection = client.db("AlternativeProducts").collection("queries");
 
-        app.post('/queries', async(req, res) => {
+        app.post('/queries', async (req, res) => {
             const queryData = req.body;
             const result = await queryCollection.insertOne(queryData);
+            res.send(result);
+        })
+
+        app.get('/queries/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email }
+            const result = await queryCollection.find(query, { sort: { _id: -1 } }).toArray();
+            res.send(result);
+        })
+
+        app.get('/query/:id', async(req, res) => {
+            const id = req.params.id;
+            const query = {_id : new ObjectId(id)};
+            const  result = await queryCollection.findOne(query);
             res.send(result);
         })
         // Send a ping to confirm a successful connection
