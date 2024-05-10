@@ -46,11 +46,31 @@ async function run() {
             res.send(result);
         })
 
-        app.get('/query/:id', async(req, res) => {
+        app.get('/query/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id : new ObjectId(id)};
-            const  result = await queryCollection.findOne(query);
+            const query = { _id: new ObjectId(id) };
+            const result = await queryCollection.findOne(query);
             res.send(result);
+        })
+
+        app.put('/update-query/:id', async (req, res) => {
+            const id = req.params.id;
+            const udeatedData = req.body;
+            // console.log(udeatedData)
+            const options = { upsert: true };
+            const filter = { _id: new ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    ProductName: udeatedData.ProductName,
+                    ProductBrand: udeatedData.ProductBrand,
+                    ProductImage: udeatedData.ProductImage,
+                    QueryTItle: udeatedData.QueryTItle,
+                    BoycottingReason: udeatedData.BoycottingReason,
+
+                },
+            };
+            const result = await queryCollection.updateOne(filter, updateDoc, options);
+            res.send(result)
         })
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
