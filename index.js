@@ -8,9 +8,46 @@ const port = process.env.PORT || 5000;
 
 //middleware
 app.use(cors({
-    origin:['http://localhost:5173',]
+    origin: ['http://localhost:5173',]
 }));
 app.use(express.json());
+
+
+
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASS}@cluster0.insvee7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
+});
+
+async function run() {
+    try {
+        // Connect the client to the server	(optional starting in v4.7)
+        await client.connect();
+
+        const queryCollection = client.db("AlternativeProducts").collection("queries");
+
+        app.post('/queries', async(req, res) => {
+            const queryData = req.body;
+            const result = await queryCollection.insertOne(queryData);
+            res.send(result);
+        })
+        // Send a ping to confirm a successful connection
+        await client.db("admin").command({ ping: 1 });
+        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    } finally {
+        // Ensures that the client will close when you finish/error
+        // await client.close();
+    }
+}
+run().catch(console.dir);
+
 
 
 
