@@ -32,10 +32,22 @@ async function run() {
         await client.connect();
 
         const queryCollection = client.db("AlternativeProducts").collection("queries");
+        const recommendationCollection = client.db("AlternativeProducts").collection("recommendation");
 
         app.post('/queries', async (req, res) => {
             const queryData = req.body;
             const result = await queryCollection.insertOne(queryData);
+            res.send(result);
+        })
+
+        app.post('/recommendation', async(req, res) => {
+            const recommendationData = req.body;
+            const result = await recommendationCollection.insertOne(recommendationData);
+            res.send(result);
+        })
+
+        app.get('/queries', async (req, res) => {
+            const result = await queryCollection.find().sort({_id: -1}).toArray();
             res.send(result);
         })
 
@@ -73,9 +85,9 @@ async function run() {
             res.send(result)
         })
 
-        app.delete('/delete-query/:id', async(req, res) => {
+        app.delete('/delete-query/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id : new ObjectId(id)};
+            const query = { _id: new ObjectId(id) };
             const result = await queryCollection.deleteOne(query);
             res.send(result);
         })
