@@ -85,6 +85,15 @@ async function run() {
             res.send(result)
         })
 
+        app.patch('/recommendation/:id', async(req, res) => {
+            const id = req.params.id;
+            
+            const filter = {_id : new ObjectId(id)};
+            const update = {$inc : {recommendationCount : 1}};
+            const result = await queryCollection.updateOne(filter, update);
+            res.send(result);
+        })
+
         app.delete('/delete-query/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
