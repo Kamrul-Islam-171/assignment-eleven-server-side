@@ -65,6 +65,13 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/query-recommendation/:id', async(req, res) => {
+            const id = req.params.id;
+            const filter = {queryId : id};
+            const result = await recommendationCollection.find(filter).toArray();
+            res.send(result);
+        })
+
         app.put('/update-query/:id', async (req, res) => {
             const id = req.params.id;
             const udeatedData = req.body;
