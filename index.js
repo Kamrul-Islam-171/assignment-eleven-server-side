@@ -80,6 +80,13 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/recommendation-for-me/:email', async(req, res) => {
+            const email = req.params.email;
+            const query = {queryEmail : email};
+            const result = await recommendationCollection.find(query).toArray();
+            res.send(result);
+        })
+
         app.put('/update-query/:id', async (req, res) => {
             const id = req.params.id;
             const udeatedData = req.body;
