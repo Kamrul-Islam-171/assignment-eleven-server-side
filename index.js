@@ -87,6 +87,11 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/recent-six', async(req, res) => {
+            const result = await queryCollection.find().sort({_id: -1}).limit(6).toArray();
+            res.send(result);
+        })
+
         app.put('/update-query/:id', async (req, res) => {
             const id = req.params.id;
             const udeatedData = req.body;
