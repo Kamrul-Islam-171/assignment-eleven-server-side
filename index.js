@@ -21,10 +21,14 @@ app.use(cookieParser())
 const verifyToken = (req, res, next) => {
     const token = req.cookies?.token;
     // console.log(token)
-    if (!token) return res.status(401).send({ message: 'Unauthorized Access' })
+    if (!token) {
+        console.log('why me bro')
+        return res.status(401).send({ message: 'Unauthorized Access' })
+    }
     if (token) {
         jwt.verify(token, process.env.ACXESS_TOKEN_SECRET, (err, decoded) => {
             if (err) {
+                // console.log('why me bro')
                 return res.status(401).send({ message: 'Unauthorized Access' })
             }
             // console.log(decoded)
@@ -61,7 +65,7 @@ async function run() {
         //jwt
         app.post('/jwt', async (req, res) => {
             const user = req.body;
-            console.log(user);
+            // console.log(user);
             const token = jwt.sign(user, process.env.ACXESS_TOKEN_SECRET, { expiresIn: '365d' });
             res.cookie('token', token, {
                 httpOnly: true,
@@ -104,7 +108,7 @@ async function run() {
 
             const email = req.params.email;
             if (tokenEmail !== email) {
-                console.log('i ma in')
+                // console.log('i ma in')
                 return res.status(403).send({ message: 'Forbidden Access' })
             }
             const query = { email }
@@ -128,7 +132,16 @@ async function run() {
 
 
         app.get('/my-recommendation/:email', verifyToken, async (req, res) => {
+
+            const tokenEmail = req.user.email;
+            // console.log('from verify = ', tokenData)
+
             const email = req.params.email;
+            if (tokenEmail !== email) {
+                // console.log('i ma in')
+                return res.status(403).send({ message: 'Forbidden Access' })
+            }
+
             // console.log(req.user.email)
             // console.log(email)
             const query = { RecommendationEmail: email };
@@ -137,7 +150,15 @@ async function run() {
         })
 
         app.get('/recommendation-for-me/:email', verifyToken, async (req, res) => {
+
+            const tokenEmail = req.user.email;
+            // console.log('from verify = ', tokenData)
+
             const email = req.params.email;
+            if (tokenEmail !== email) {
+                // console.log('i ma in')
+                return res.status(403).send({ message: 'Forbidden Access' })
+            }
             const query = { queryEmail: email };
             const result = await recommendationCollection.find(query).toArray();
             res.send(result);
