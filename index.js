@@ -22,7 +22,7 @@ const verifyToken = (req, res, next) => {
     const token = req.cookies?.token;
     // console.log(token)
     if (!token) {
-        console.log('why me bro')
+        // console.log('why me bro')
         return res.status(401).send({ message: 'Unauthorized Access' })
     }
     if (token) {
