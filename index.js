@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 
 //middleware
 app.use(cors({
-    origin: ['http://localhost:5173',],
+    origin: ['http://localhost:5173', 'https://assignment-eleven-6975c.web.app', 'https://assignment-eleven-6975c.firebaseapp.com'],
     credentials: true,
     optionsSuccessStatus: 200,
 }));
@@ -56,7 +56,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
 
         const queryCollection = client.db("AlternativeProducts").collection("queries");
         const recommendationCollection = client.db("AlternativeProducts").collection("recommendation");
