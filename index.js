@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 
 //middleware
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://assignment-eleven-6975c.web.app', 'https://assignment-eleven-6975c.firebaseapp.com', 'https://66449dbbfe8af7089a452398--tourmaline-seahorse-94b672.netlify.app'],
+    origin: ['http://localhost:5173', 'https://assignment-eleven-6975c.web.app', 'https://assignment-eleven-6975c.firebaseapp.com', 'https://66449dbbfe8af7089a452398--tourmaline-seahorse-94b672.netlify.app', 'https://665848b3f499d1dc1c2381c5--gilded-creponne-89322d.netlify.app'],
     credentials: true,
 }));
 app.use(express.json());
