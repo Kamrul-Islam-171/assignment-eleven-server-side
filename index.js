@@ -10,9 +10,8 @@ const port = process.env.PORT || 5000;
 
 //middleware
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://assignment-eleven-6975c.web.app', 'https://assignment-eleven-6975c.firebaseapp.com'],
+    origin: ['http://localhost:5173', 'https://assignment-eleven-6975c.web.app', 'https://assignment-eleven-6975c.firebaseapp.com', 'https://66449dbbfe8af7089a452398--tourmaline-seahorse-94b672.netlify.app'],
     credentials: true,
-    optionsSuccessStatus: 200,
 }));
 app.use(express.json());
 app.use(cookieParser())
@@ -98,7 +97,22 @@ async function run() {
         })
 
         app.get('/queries', async (req, res) => {
-            const result = await queryCollection.find().sort({ _id: -1 }).toArray();
+            const userQuery = req.query;
+            console.log(userQuery)
+            const query = {
+                // recommendationCount : {$gte : userQuery.min, $lte : userQuery.max}
+                recommendationCount : {$gte : parseInt(userQuery.min), $lte : parseInt(userQuery.max)},
+                ProductName:{
+                    $regex:userQuery.search, $options:'i'
+                }
+            };
+            const options = {
+                sort : {
+                    recommendationCount : userQuery.sort === 'asc' ? 1 : -1
+                }
+            }
+            // const result = await queryCollection.find().sort({ _id: -1 }).toArray();
+            const result = await queryCollection.find(query, options).toArray();
             res.send(result);
         })
 
